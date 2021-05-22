@@ -22,6 +22,9 @@ python manage.py startapp test_app
 
 # Model
 1. add `test_app.apps.TestAppConfig` to `INSTALLED_APPS` in `setting.py`
-2. ```batch
-python manage.py makemigrations test_app
-```
+2. `python manage.py makemigrations test_app`
+3. `python manage.py migrate test_app`
+
+# Create superuser
+1. `python manage.py migrate`
+2. `python manage.py createsuperuser`
