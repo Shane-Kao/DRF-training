@@ -3,6 +3,7 @@ from django.http import JsonResponse, response
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 
+from .serializers import SimpleSerializer
 from .models import TestModel
 # Create your views here.
 
@@ -18,8 +19,11 @@ from .models import TestModel
 #         return JsonResponse({"data": "Update data"})
 #     return JsonResponse({"error": "method not allowed"})
 
-class simple(APIView):
+class Simple(APIView):
+
     def post(self, request):
+        serializer = SimpleSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         new_ = TestModel.objects.create(
             name=request.data["name"],
             description=request.data["description"],
@@ -27,8 +31,10 @@ class simple(APIView):
             is_live=request.data["is_live"],
             amount=request.data["amount"],
         )
-        return JsonResponse({"data": model_to_dict(new_)})
+        return JsonResponse({"data": SimpleSerializer(new_).data})
+        # return JsonResponse({"data": model_to_dict(new_)})
 
     def get(self, request):
         content = TestModel.objects.all().values()
-        return JsonResponse({"data": list(content)})
+        return JsonResponse({"data": SimpleSerializer(content, many=True).data})
+        # return JsonResponse({"data": list(content)})
