@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, response
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
+from rest_framework import generics, viewsets
 
 from .serializers import SimpleSerializer
 from .models import TestModel
@@ -53,3 +54,19 @@ class Simple(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return JsonResponse({"data": serializer.data})
+
+
+class SimpleGenerics(viewsets.ModelViewSet):
+    queryset = TestModel.objects.all()
+    serializer_class = SimpleSerializer
+
+
+class SimpleGenericsUpdate(generics.UpdateAPIView):
+    queryset = TestModel.objects.all()
+    serializer_class = SimpleSerializer
+    lookup_field = "id"
+
+
+class SimpleViewset(viewsets.ModelViewSet):
+    queryset = TestModel.objects.all()
+    serializer_class = SimpleSerializer
